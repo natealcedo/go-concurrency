@@ -1,17 +1,22 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
-	// There are 2 types of channels: buffered and unbuffered
-	// An unbuffered channel is always going to block regardless of whether its full or not
-	resultch := make(chan string, 1) // unbuffered channel
+	msgCh := make(chan string, 128)
 
-	resultch <- "foo" // -> is now full and will block
+	msgCh <- "A"
+	msgCh <- "B"
+	msgCh <- "C"
+	close(msgCh)
 
-	result := <-resultch
-	fmt.Println(result)
+	for {
+		msg, ok := <-msgCh
+		if !ok {
+			break
+		}
+		fmt.Println(msg)
+	}
 
+	fmt.Println("Done reading all the messages")
 }
