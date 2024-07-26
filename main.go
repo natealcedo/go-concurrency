@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 func main() {
-	res := fetchResource(10)
-	fmt.Println(res)
-}
+	// There are 2 types of channels: buffered and unbuffered
+	// An unbuffered channel is always going to block regardless of whether its full or not
+	resultch := make(chan string, 1) // unbuffered channel
 
-func fetchResource(val int) string {
-	time.Sleep(2 * time.Second)
+	resultch <- "foo" // -> is now full and will block
 
-	return fmt.Sprintf("result %d", val)
+	result := <-resultch
+	fmt.Println(result)
+
 }
